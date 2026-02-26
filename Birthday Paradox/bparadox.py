@@ -26,25 +26,27 @@ def has_duplicates(bdays):
             return bdays.index(b)
         seen.add(b)
     return False
-def main1():
-    n=num_people()
+def main1(n):
     bdays=birthdays(n)
     for n in range(0,n):
         print(bdays[n]+","+" ")
     if has_duplicates(bdays)!=False:
         print("in these, multiple people have a birthday on the same day "+str(has_duplicates(bdays)+1))
-        print("Generating"+n+"random birthdays"+"1000 times...")
+        print("Generating"+str(n)+"random birthdays"+"1000 times...")
     else:
         print("in these, no one has a birthday on the same day")
-        print("Generating"+n+"random birthdays"+"1000 times...")
-def main2():
-    z=input("press enter to run 1000 simulations...")
-    n=num_people()
+        print("Generating"+str(n)+"random birthdays"+"1000 times...")
+def main2(n):
+    z=input("press enter to run 100000 simulations...")
     count=0
-    for i in range(1000):
+    for i in range(100000):
         bdays=birthdays(n)
         if has_duplicates(bdays)!=False:
             count+=1
         print(str(i)+" simulations run...")
-    print("Out of 1000 simulations, "+str(count)+" had at least one shared birthday.")
-    print("That means that in a group of "+str(n)+" people, there is a "+str(count/10)+"% chance that two people share a birthday.")
+    print("Out of 100000 simulations, "+str(count)+" had at least one shared birthday.")
+    print("That means that in a group of "+str(n)+" people, there is a "+str(count/1000)+"% chance that two people share a birthday.")
+    print("that's probably higher than you expected!")
+n=num_people()
+main1(n)
+main2(n)
