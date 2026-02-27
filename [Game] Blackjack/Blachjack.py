@@ -21,18 +21,18 @@ def play():
         file_play=open("cards.txt","rb")
         data=load(file_play)
         file_play.close()
-        player_hand= data[0],data[1]
+        player_hand=[data[0],data[1]]
+        sum_player=0
+        for cards in player_hand:
+            sum_player+=cards["value"]
         serving()
         file_play=open("cards.txt","rb")
         data=load(file_play)
-        dealer_hand=data[0],data[1]
-        file_play.close()
-        sum_player=0
+        dealer_hand=[data[0],data[1]]
         sum_dealer=0
-        for card in player_hand:
-            sum_player+=card.value
         for card in dealer_hand:
-            sum_dealer+=card.value
+            sum_dealer+=card["value"]
+        file_play.close()
         print("Your hand:",player_hand)
         print("Dealer's hand:",dealer_hand[0])
         if sum_player==21:
@@ -52,11 +52,16 @@ def play():
                 print("Invalid input. Please enter 'hit' or 'stand' or 'H' or 'S'.")
                 action=input()
             if action.upper()=="HIT" or action.upper()=="H":
-                player_hand.append(deal_card())
+                deal_card()
+                file_deal=open("deal_cards.txt","rb")
+                data=load(file_deal)
+                dealed_card=data
+                file_deal.close()
+                player_hand.append(dealed_card)
                 print("Your hand:",player_hand)
-                sum_player+=player_hand[-1].value
+                sum_player+=player_hand[-1]["value"]
                 for card in player_hand:
-                    sum_player+=card.value
+                    sum_player+=card["value"]
             elif action.upper()=="STAND" or action.upper()=="S":
                 break
         if sum_player>21:
@@ -66,11 +71,15 @@ def play():
             return
         print("Dealer's hand:",dealer_hand)
         while sum_dealer<17:
-            dealer_hand.append(deal_card())
+            file_deal=open("deal_cards.txt","rb")
+            data=load(file_deal)
+            dealed_card=data[0]
+            file_deal.close()
+            dealer_hand.append(dealed_card)
             print("Dealer's hand:",dealer_hand)
-            sum_dealer+=dealer_hand[-1].value
+            sum_dealer+=dealer_hand[-1]["value"]
             for card in dealer_hand:
-                sum_dealer+=card.value
+                sum_dealer+=card["value"]
         if sum_dealer>21:
             print("Dealer busts! You win!")
             money+=bet*2
@@ -94,19 +103,19 @@ def serving():
     file=open("cards.txt","wb")
     card_detail=dict()
     for i in range(2):
-        value_num=value[random.randint(0,12)]
-        card_detail[i]={"value":value_num,"card":card[value_num-2],"suit":card_suit[random.randint(0,3)]}
-        card_detail[i]["card"]=card[value-2]
-        card_detail[i]["suit"]=card_suit[random.randint(0,3)]
+        value_num=value[randint(0,12)]
+        card_detail[i]={"value":value_num,"card":card[value_num-2],"suit":card_suit[randint(0,3)]}
+        card_detail[i]["card"]=card[value_num-2]
+        card_detail[i]["suit"]=card_suit[randint(0,3)]
     dump(card_detail,file)
     file.close()
 def deal_card():
-    file=open("cards.txt","wb")
+    file=open("deal_cards.txt","wb")
     card_detail=dict()
-    for i in range(2):
-        value_num=value[random.randint(0,12)]
-        card_detail[i]={"value":value_num,"card":card[value_num-2],"suit":card_suit[random.randint(0,3)]}
-        card_detail[i]["card"]=card[value-2]
-        card_detail[i]["suit"]=card_suit[random.randint(0,3)]
+    value_num=value[randint(0,12)]
+    card_detail={"value":value_num,"card":card[value_num-2],"suit":card_suit[randint(0,3)]}
+    card_detail["card"]=card[value_num-2]
+    card_detail["suit"]=card_suit[randint(0,3)]
     dump(card_detail,file)
     file.close()
+play()
